@@ -2,18 +2,27 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Swine Tap</title>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+  />
+  <title>Swin Tap</title>
+
   <style>
     :root {
-      --bg-1: #0f172a;
-      --bg-2: #1e293b;
+      --bg-1: #081226;
+      --bg-2: #16243f;
       --card: rgba(255, 255, 255, 0.08);
       --card-border: rgba(255, 255, 255, 0.16);
       --text: #f8fafc;
       --muted: #cbd5e1;
       --accent: #f472b6;
       --accent-2: #fb7185;
+      --gold-1: #fff7cc;
+      --gold-2: #ffe27a;
+      --gold-3: #ffd24d;
+      --gold-4: #ffbf1f;
+      --gold-5: #b67a00;
       --success: #22c55e;
       --shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
     }
@@ -23,23 +32,28 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    html, body {
+    html,
+    body {
       margin: 0;
       min-height: 100%;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color: var(--text);
       background:
-        radial-gradient(circle at top left, rgba(244, 114, 182, 0.22), transparent 30%),
-        radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.18), transparent 28%),
+        radial-gradient(circle at top left, rgba(244, 114, 182, 0.18), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.16), transparent 28%),
         linear-gradient(135deg, var(--bg-1), var(--bg-2));
       overflow-x: hidden;
+      touch-action: manipulation;
     }
 
     body {
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 24px;
+      padding: 20px;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
     }
 
     .app {
@@ -108,7 +122,15 @@
       font-weight: 900;
       letter-spacing: 0.04em;
       text-transform: uppercase;
-      background: linear-gradient(180deg, #fff7cc 0%, #ffe27a 18%, #ffd24d 40%, #ffbf1f 58%, #fff1a6 76%, #b67a00 100%);
+      background: linear-gradient(
+        180deg,
+        var(--gold-1) 0%,
+        var(--gold-2) 18%,
+        var(--gold-3) 40%,
+        var(--gold-4) 58%,
+        #fff1a6 76%,
+        var(--gold-5) 100%
+      );
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
@@ -122,11 +144,16 @@
     }
 
     .ceo-title::before {
-      content: '';
+      content: "";
       position: absolute;
       inset: -1px;
       border-radius: 18px;
-      background: linear-gradient(135deg, rgba(255, 235, 140, 0.18), rgba(255, 187, 0, 0.05), rgba(255,255,255,0.16));
+      background: linear-gradient(
+        135deg,
+        rgba(255, 235, 140, 0.18),
+        rgba(255, 187, 0, 0.05),
+        rgba(255,255,255,0.16)
+      );
       z-index: -1;
       box-shadow:
         inset 0 1px 0 rgba(255,255,255,0.2),
@@ -184,6 +211,7 @@
         inset 0 0 40px rgba(255,255,255,0.05),
         0 0 30px rgba(244, 114, 182, 0.15);
       animation: floatRing 5s ease-in-out infinite;
+      pointer-events: none;
     }
 
     .ring::before,
@@ -220,9 +248,10 @@
         0 20px 40px rgba(0,0,0,0.28),
         0 0 36px rgba(244, 114, 182, 0.18);
       transition: transform 0.08s ease, box-shadow 0.2s ease, filter 0.25s ease;
-      user-select: none;
       overflow: hidden;
       isolation: isolate;
+      touch-action: manipulation;
+      outline: none;
     }
 
     .tap-button::before {
@@ -230,18 +259,19 @@
       position: absolute;
       inset: 0;
       border-radius: 50%;
-      background: linear-gradient(135deg, rgba(255,255,255,0.22), transparent 35%, transparent 65%, rgba(255,255,255,0.08));
+      background: linear-gradient(
+        135deg,
+        rgba(255,255,255,0.22),
+        transparent 35%,
+        transparent 65%,
+        rgba(255,255,255,0.08)
+      );
       z-index: 0;
       pointer-events: none;
     }
 
     .tap-button:hover {
       filter: brightness(1.05);
-      box-shadow:
-        inset 0 8px 22px rgba(255,255,255,0.14),
-        inset 0 -12px 22px rgba(0,0,0,0.2),
-        0 26px 44px rgba(0,0,0,0.3),
-        0 0 50px rgba(244, 114, 182, 0.24);
     }
 
     .tap-button:active,
@@ -269,6 +299,7 @@
       object-fit: contain;
       pointer-events: none;
       user-select: none;
+      -webkit-user-drag: none;
       filter: drop-shadow(0 10px 18px rgba(0,0,0,0.22));
       transition: transform 0.18s ease, filter 0.25s ease, opacity 0.22s ease;
     }
@@ -363,6 +394,7 @@
       background: rgba(255,255,255,0.1);
       border: 1px solid rgba(255,255,255,0.12);
       backdrop-filter: blur(10px);
+      touch-action: manipulation;
     }
 
     .btn:hover { transform: translateY(-1px); }
@@ -402,15 +434,9 @@
     }
 
     @keyframes goldShine {
-      0% {
-        filter: drop-shadow(0 0 10px rgba(255, 204, 51, 0.18));
-      }
-      50% {
-        filter: drop-shadow(0 0 18px rgba(255, 214, 102, 0.34));
-      }
-      100% {
-        filter: drop-shadow(0 0 10px rgba(255, 204, 51, 0.18));
-      }
+      0% { filter: drop-shadow(0 0 10px rgba(255, 204, 51, 0.18)); }
+      50% { filter: drop-shadow(0 0 18px rgba(255, 214, 102, 0.34)); }
+      100% { filter: drop-shadow(0 0 10px rgba(255, 204, 51, 0.18)); }
     }
 
     .pop-in {
@@ -449,7 +475,7 @@
       <div class="badge">🐷 Tap game</div>
       <h1>Тапай по свину</h1>
       <p class="subtitle">
-        Нажимай на круглого свина, набирай тапы и открой новую форму на 50-м нажатии.
+        Нажимай на круглого свина, набирай тапы и открывай нового свина каждые 50 нажатий.
       </p>
       <div class="ceo-title">СЕО Никозавр и Димозавр</div>
     </header>
@@ -467,8 +493,8 @@
 
     <div class="tap-zone-wrap" id="tapZoneWrap">
       <div class="ring"></div>
-      <button class="tap-button" id="tapButton" aria-label="Тапнуть по свину">
-        <img class="pig-image" id="pigImage" src="swin.png" alt="Свин" />
+      <button class="tap-button" id="tapButton" aria-label="Тапнуть по свину" type="button">
+        <img class="pig-image" id="pigImage" src="swin.png" alt="Свин 1" draggable="false" />
       </button>
     </div>
 
@@ -476,7 +502,7 @@
 
     <section class="progress-wrap">
       <div class="progress-meta">
-        <span>Прогресс до нового свина</span>
+        <span>Прогресс до следующего свина</span>
         <span id="progressText">0 / 50</span>
       </div>
       <div class="progress-bar">
@@ -485,93 +511,107 @@
     </section>
 
     <div class="footer-actions">
-      <button class="btn btn-primary" id="resetButton">Сбросить счётчик</button>
-      <button class="btn" id="vibeButton">Вкл/выкл вибро-эффект</button>
+      <button class="btn btn-primary" id="resetButton" type="button">Сбросить счётчик</button>
+      <button class="btn" id="vibeButton" type="button">Вкл/выкл вибро-эффект</button>
     </div>
   </main>
 
   <script>
-    const GOAL = 50;
+    const GOAL_STEP = 50;
+
     const pigStages = [
-      'swin.png',
-      'swin2.png',
-      'swin3.png',
-      'swin4.png',
-      'swin5.png',
-      'swin6.png',
-      'swin7.png',
-      'swin8.png',
-      'swin9.png',
-      'swin10.png'
+      "swin.png",
+      "swin2.png",
+      "swin3.png",
+      "swin4.png",
+      "swin5.png",
+      "swin6.png",
+      "swin7.png",
+      "swin8.png",
+      "swin9.png",
+      "swin10.png"
     ];
 
-    const tapButton = document.getElementById('tapButton');
-    const pigImage = document.getElementById('pigImage');
-    const tapCountEl = document.getElementById('tapCount');
-    const progressFill = document.getElementById('progressFill');
-    const progressText = document.getElementById('progressText');
-    const statusText = document.getElementById('statusText');
-    const resetButton = document.getElementById('resetButton');
-    const vibeButton = document.getElementById('vibeButton');
-    const tapZoneWrap = document.getElementById('tapZoneWrap');
+    const tapButton = document.getElementById("tapButton");
+    const pigImage = document.getElementById("pigImage");
+    const tapCountEl = document.getElementById("tapCount");
+    const goalValueEl = document.getElementById("goalValue");
+    const progressFill = document.getElementById("progressFill");
+    const progressText = document.getElementById("progressText");
+    const statusText = document.getElementById("statusText");
+    const resetButton = document.getElementById("resetButton");
+    const vibeButton = document.getElementById("vibeButton");
+    const tapZoneWrap = document.getElementById("tapZoneWrap");
 
     let tapCount = 0;
     let currentPigStage = 0;
     let vibrationEnabled = true;
+    let lastTouchEnd = 0;
+
+    function getMaxStage() {
+      return pigStages.length - 1;
+    }
+
+    function getNextGoal() {
+      if (currentPigStage >= getMaxStage()) {
+        return currentPigStage * GOAL_STEP;
+      }
+      return (currentPigStage + 1) * GOAL_STEP;
+    }
 
     function updateUI() {
-      tapCountEl.textContent = tapCount;
-
-      const maxStage = pigStages.length - 1;
-      const unlockedStage = Math.min(Math.floor(tapCount / GOAL), maxStage);
+      const maxStage = getMaxStage();
+      const unlockedStage = Math.min(Math.floor(tapCount / GOAL_STEP), maxStage);
 
       if (unlockedStage > currentPigStage) {
         currentPigStage = unlockedStage;
         switchPig(currentPigStage);
       }
 
-      const previousThreshold = currentPigStage * GOAL;
-      const nextThreshold = (currentPigStage + 1) * GOAL;
+      tapCountEl.textContent = tapCount;
+
+      const previousThreshold = currentPigStage * GOAL_STEP;
+      const nextGoal = getNextGoal();
       const tapsIntoCurrentStage = tapCount - previousThreshold;
-      const progress = currentPigStage >= maxStage
-        ? 100
-        : Math.min((tapsIntoCurrentStage / GOAL) * 100, 100);
-
-      progressText.textContent = currentPigStage >= maxStage
-        ? `${GOAL} / ${GOAL}`
-        : `${Math.max(0, Math.min(tapsIntoCurrentStage, GOAL))} / ${GOAL}`;
-
-      progressFill.style.width = `${progress}%`;
 
       if (currentPigStage >= maxStage) {
-        tapButton.classList.add('upgraded');
-        progressFill.classList.add('done');
-        statusText.textContent = 'Ты открыл всех свинов! Продолжай тапать 👑';
-        statusText.classList.add('highlight');
+        goalValueEl.textContent = "MAX";
+        progressText.textContent = `${GOAL_STEP} / ${GOAL_STEP}`;
+        progressFill.style.width = "100%";
+        progressFill.classList.add("done");
+        tapButton.classList.add("upgraded");
+        statusText.textContent = "Ты открыл всех свинов! Продолжай тапать 👑";
+        statusText.classList.add("highlight");
       } else {
-        const tapsLeft = Math.max(nextThreshold - tapCount, 0);
-        tapButton.classList.toggle('upgraded', currentPigStage > 0);
-        progressFill.classList.remove('done');
+        const tapsLeft = Math.max(nextGoal - tapCount, 0);
+        const progress = Math.min((tapsIntoCurrentStage / GOAL_STEP) * 100, 100);
+
+        goalValueEl.textContent = nextGoal;
+        progressText.textContent = `${Math.max(0, Math.min(tapsIntoCurrentStage, GOAL_STEP))} / ${GOAL_STEP}`;
+        progressFill.style.width = `${progress}%`;
+        progressFill.classList.remove("done");
+        tapButton.classList.toggle("upgraded", currentPigStage > 0);
+
         statusText.textContent = `До следующего свина осталось: ${tapsLeft}`;
-        statusText.classList.toggle('highlight', currentPigStage > 0);
+        statusText.classList.toggle("highlight", currentPigStage > 0);
       }
     }
 
     function switchPig(stageIndex) {
-      pigImage.style.opacity = '0';
-      pigImage.style.transform = 'scale(0.86) rotate(-8deg)';
+      pigImage.style.opacity = "0";
+      pigImage.style.transform = "scale(0.86) rotate(-8deg)";
 
       setTimeout(() => {
         pigImage.src = pigStages[stageIndex];
         pigImage.alt = `Свин ${stageIndex + 1}`;
-        pigImage.style.opacity = '1';
-        pigImage.style.transform = 'scale(1.04) rotate(3deg)';
-        pigImage.classList.remove('pop-in');
+        pigImage.style.opacity = "1";
+        pigImage.style.transform = "scale(1.04) rotate(3deg)";
+        pigImage.classList.remove("pop-in");
         void pigImage.offsetWidth;
-        pigImage.classList.add('pop-in');
+        pigImage.classList.add("pop-in");
 
         setTimeout(() => {
-          pigImage.style.transform = '';
+          pigImage.style.transform = "";
         }, 240);
       }, 180);
     }
@@ -579,13 +619,13 @@
     function maybeVibrate() {
       if (!vibrationEnabled) return;
       if (navigator.vibrate) {
-        navigator.vibrate(20);
+        navigator.vibrate(15);
       }
     }
 
-    function createFloatingText(x, y, text = '+1') {
-      const el = document.createElement('div');
-      el.className = 'floating-text';
+    function createFloatingText(x, y, text = "+1") {
+      const el = document.createElement("div");
+      el.className = "floating-text";
       el.textContent = text;
 
       const rect = tapZoneWrap.getBoundingClientRect();
@@ -601,54 +641,78 @@
       updateUI();
       maybeVibrate();
 
-      tapButton.classList.remove('is-pressed');
+      tapButton.classList.remove("is-pressed");
       void tapButton.offsetWidth;
-      tapButton.classList.add('is-pressed');
-      setTimeout(() => tapButton.classList.remove('is-pressed'), 90);
+      tapButton.classList.add("is-pressed");
+      setTimeout(() => tapButton.classList.remove("is-pressed"), 90);
 
-      createFloatingText(clientX, clientY, currentPigStage > 0 ? '+1 ✨' : '+1');
+      createFloatingText(clientX, clientY, currentPigStage > 0 ? "+1 ✨" : "+1");
 
-      if (tapCount > 0 && tapCount % GOAL === 0) {
+      if (tapCount > 0 && tapCount % GOAL_STEP === 0) {
         createFloatingText(clientX, clientY - 25, `SWIN ${currentPigStage + 1}!`);
       }
     }
 
-    tapButton.addEventListener('click', (e) => {
+    tapButton.addEventListener("click", (e) => {
       tapPig(e.clientX, e.clientY);
     });
 
-    tapButton.addEventListener('touchstart', (e) => {
+    tapButton.addEventListener("touchstart", (e) => {
       const touch = e.touches[0];
       if (!touch) return;
-      tapButton.classList.add('is-pressed');
-      createFloatingText(touch.clientX, touch.clientY, currentPigStage > 0 ? '+1 ✨' : '+1');
+      tapButton.classList.add("is-pressed");
     }, { passive: true });
 
-    tapButton.addEventListener('touchend', () => {
-      tapButton.classList.remove('is-pressed');
-    }, { passive: true });
+    tapButton.addEventListener("touchend", (e) => {
+      const now = Date.now();
 
-    resetButton.addEventListener('click', () => {
+      if (now - lastTouchEnd < 300) {
+        e.preventDefault();
+      }
+      lastTouchEnd = now;
+
+      tapButton.classList.remove("is-pressed");
+
+      const touch = e.changedTouches[0];
+      if (!touch) return;
+
+      tapPig(touch.clientX, touch.clientY);
+    }, { passive: false });
+
+    document.addEventListener("dblclick", (e) => {
+      e.preventDefault();
+    }, { passive: false });
+
+    document.addEventListener("gesturestart", (e) => {
+      e.preventDefault();
+    }, { passive: false });
+
+    document.addEventListener("touchmove", (e) => {
+      if (e.scale && e.scale !== 1) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+
+    resetButton.addEventListener("click", () => {
       tapCount = 0;
       currentPigStage = 0;
       pigImage.src = pigStages[0];
-      pigImage.alt = 'Свин 1';
-      tapButton.classList.remove('upgraded');
-      progressFill.classList.remove('done');
-      statusText.textContent = 'Свин готов к тапам 🐽';
-      statusText.classList.remove('highlight');
+      pigImage.alt = "Свин 1";
+      tapButton.classList.remove("upgraded");
+      progressFill.classList.remove("done");
+      statusText.textContent = "Свин готов к тапам 🐽";
+      statusText.classList.remove("highlight");
       updateUI();
     });
 
-    vibeButton.addEventListener('click', () => {
+    vibeButton.addEventListener("click", () => {
       vibrationEnabled = !vibrationEnabled;
       vibeButton.textContent = vibrationEnabled
-        ? 'Вкл/выкл вибро-эффект'
-        : 'Вибро-эффект выключен';
+        ? "Вкл/выкл вибро-эффект"
+        : "Вибро-эффект выключен";
     });
 
     updateUI();
   </script>
 </body>
 </html>
-
