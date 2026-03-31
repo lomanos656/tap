@@ -6,25 +6,29 @@
     name="viewport"
     content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
   />
-  <title>Swin Tap</title>
+  <title>Swin Money Tap</title>
 
   <style>
     :root {
-      --bg-1: #081226;
-      --bg-2: #16243f;
-      --card: rgba(255, 255, 255, 0.08);
-      --card-border: rgba(255, 255, 255, 0.16);
-      --text: #f8fafc;
-      --muted: #cbd5e1;
-      --accent: #f472b6;
-      --accent-2: #fb7185;
+      --bg-1: #05140c;
+      --bg-2: #0b2416;
+      --bg-3: #10331f;
+      --card: rgba(255, 255, 255, 0.07);
+      --card-border: rgba(163, 230, 53, 0.16);
+      --text: #f4fff4;
+      --muted: #b9d9c0;
+      --green-1: #22c55e;
+      --green-2: #16a34a;
+      --green-3: #4ade80;
+      --green-4: #86efac;
+      --money-glow: rgba(34, 197, 94, 0.32);
       --gold-1: #fff7cc;
       --gold-2: #ffe27a;
       --gold-3: #ffd24d;
       --gold-4: #ffbf1f;
       --gold-5: #b67a00;
-      --success: #22c55e;
-      --shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+      --danger-soft: rgba(255,255,255,0.08);
+      --shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
     }
 
     * {
@@ -39,9 +43,9 @@
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color: var(--text);
       background:
-        radial-gradient(circle at top left, rgba(244, 114, 182, 0.18), transparent 30%),
-        radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.16), transparent 28%),
-        linear-gradient(135deg, var(--bg-1), var(--bg-2));
+        radial-gradient(circle at top left, rgba(74, 222, 128, 0.14), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(34, 197, 94, 0.18), transparent 28%),
+        linear-gradient(145deg, var(--bg-1), var(--bg-2) 55%, var(--bg-3));
       overflow-x: hidden;
       touch-action: manipulation;
     }
@@ -56,31 +60,56 @@
       -webkit-touch-callout: none;
     }
 
+    .money-pattern {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.08;
+      background-image:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,0.25) 0 2px, transparent 2px),
+        radial-gradient(circle at 80% 60%, rgba(255,255,255,0.18) 0 2px, transparent 2px),
+        linear-gradient(90deg, transparent 0 48%, rgba(255,255,255,0.08) 48% 52%, transparent 52% 100%);
+      background-size: 140px 140px, 180px 180px, 160px 160px;
+      animation: driftBg 16s linear infinite;
+    }
+
     .app {
       width: 100%;
-      max-width: 460px;
+      max-width: 470px;
       padding: 28px;
-      border-radius: 28px;
-      background: var(--card);
+      border-radius: 30px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.09), rgba(255,255,255,0.05));
       border: 1px solid var(--card-border);
       box-shadow: var(--shadow);
       backdrop-filter: blur(18px);
       position: relative;
       overflow: hidden;
+      isolation: isolate;
     }
 
     .app::before {
       content: "";
       position: absolute;
       inset: -20%;
-      background: radial-gradient(circle, rgba(255,255,255,0.08), transparent 45%);
+      background:
+        radial-gradient(circle, rgba(74, 222, 128, 0.12), transparent 38%),
+        radial-gradient(circle at 70% 40%, rgba(34, 197, 94, 0.14), transparent 28%);
       pointer-events: none;
       animation: pulseBg 8s ease-in-out infinite;
+      z-index: 0;
+    }
+
+    .header,
+    .stats,
+    .tap-zone-wrap,
+    .status,
+    .progress-wrap,
+    .footer-actions {
+      position: relative;
+      z-index: 1;
     }
 
     .header {
-      position: relative;
-      z-index: 1;
       text-align: center;
       margin-bottom: 22px;
     }
@@ -89,28 +118,29 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 8px 14px;
+      padding: 9px 15px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.09);
-      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(34, 197, 94, 0.14);
+      border: 1px solid rgba(134, 239, 172, 0.24);
       font-size: 13px;
-      color: var(--muted);
+      color: #dfffe7;
       margin-bottom: 14px;
+      box-shadow: 0 0 20px rgba(34, 197, 94, 0.1);
     }
 
     h1 {
       margin: 0;
-      font-size: clamp(28px, 4vw, 38px);
-      line-height: 1.05;
-      letter-spacing: -0.03em;
+      font-size: clamp(30px, 4vw, 40px);
+      line-height: 1.04;
+      letter-spacing: -0.035em;
     }
 
     .subtitle {
       margin: 10px auto 0;
-      max-width: 320px;
+      max-width: 330px;
       font-size: 15px;
       color: var(--muted);
-      line-height: 1.5;
+      line-height: 1.55;
     }
 
     .ceo-title {
@@ -150,19 +180,17 @@
       border-radius: 18px;
       background: linear-gradient(
         135deg,
-        rgba(255, 235, 140, 0.18),
-        rgba(255, 187, 0, 0.05),
-        rgba(255,255,255,0.16)
+        rgba(255, 235, 140, 0.15),
+        rgba(255, 187, 0, 0.04),
+        rgba(255,255,255,0.12)
       );
       z-index: -1;
       box-shadow:
-        inset 0 1px 0 rgba(255,255,255,0.2),
-        0 10px 24px rgba(255, 191, 31, 0.14);
+        inset 0 1px 0 rgba(255,255,255,0.18),
+        0 10px 24px rgba(255, 191, 31, 0.12);
     }
 
     .stats {
-      position: relative;
-      z-index: 1;
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 12px;
@@ -171,10 +199,11 @@
 
     .stat-card {
       padding: 16px;
-      border-radius: 20px;
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 22px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(134, 239, 172, 0.14);
       text-align: center;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
     }
 
     .stat-label {
@@ -189,28 +218,28 @@
       font-size: clamp(24px, 5vw, 34px);
       font-weight: 800;
       letter-spacing: -0.03em;
+      text-shadow: 0 0 16px rgba(74, 222, 128, 0.08);
     }
 
     .tap-zone-wrap {
       position: relative;
-      z-index: 1;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 16px 0 24px;
-      min-height: 340px;
+      margin: 18px 0 22px;
+      min-height: 350px;
     }
 
     .ring {
       position: absolute;
-      width: 320px;
-      height: 320px;
+      width: 324px;
+      height: 324px;
       border-radius: 50%;
-      border: 1px solid rgba(255,255,255,0.12);
+      border: 1px solid rgba(134, 239, 172, 0.16);
       box-shadow:
-        inset 0 0 40px rgba(255,255,255,0.05),
-        0 0 30px rgba(244, 114, 182, 0.15);
-      animation: floatRing 5s ease-in-out infinite;
+        inset 0 0 44px rgba(255,255,255,0.04),
+        0 0 36px rgba(34, 197, 94, 0.14);
+      animation: floatRing 5.4s ease-in-out infinite;
       pointer-events: none;
     }
 
@@ -218,20 +247,20 @@
     .ring::after {
       content: "";
       position: absolute;
-      inset: 14px;
       border-radius: 50%;
-      border: 1px solid rgba(255,255,255,0.08);
+      inset: 14px;
+      border: 1px solid rgba(134, 239, 172, 0.1);
     }
 
     .ring::after {
       inset: 28px;
-      border-color: rgba(255,255,255,0.05);
+      border-color: rgba(134, 239, 172, 0.06);
     }
 
     .tap-button {
       position: relative;
-      width: 250px;
-      height: 250px;
+      width: 252px;
+      height: 252px;
       border: none;
       border-radius: 50%;
       cursor: pointer;
@@ -239,14 +268,14 @@
       align-items: center;
       justify-content: center;
       background:
-        radial-gradient(circle at 30% 30%, rgba(255,255,255,0.34), rgba(255,255,255,0.08) 45%, rgba(255,255,255,0.02) 70%),
-        linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.04));
-      border: 1px solid rgba(255,255,255,0.18);
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,0.28), rgba(255,255,255,0.07) 42%, rgba(255,255,255,0.02) 70%),
+        linear-gradient(180deg, rgba(74, 222, 128, 0.12), rgba(22, 163, 74, 0.08));
+      border: 1px solid rgba(134, 239, 172, 0.22);
       box-shadow:
-        inset 0 8px 22px rgba(255,255,255,0.12),
-        inset 0 -12px 22px rgba(0,0,0,0.18),
-        0 20px 40px rgba(0,0,0,0.28),
-        0 0 36px rgba(244, 114, 182, 0.18);
+        inset 0 10px 24px rgba(255,255,255,0.1),
+        inset 0 -12px 22px rgba(0,0,0,0.2),
+        0 20px 42px rgba(0,0,0,0.3),
+        0 0 42px rgba(34, 197, 94, 0.2);
       transition: transform 0.08s ease, box-shadow 0.2s ease, filter 0.25s ease;
       overflow: hidden;
       isolation: isolate;
@@ -259,28 +288,20 @@
       position: absolute;
       inset: 0;
       border-radius: 50%;
-      background: linear-gradient(
-        135deg,
-        rgba(255,255,255,0.22),
-        transparent 35%,
-        transparent 65%,
-        rgba(255,255,255,0.08)
-      );
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.18), transparent 36%, transparent 64%, rgba(255,255,255,0.07)),
+        radial-gradient(circle at 50% 85%, rgba(34, 197, 94, 0.08), transparent 45%);
       z-index: 0;
       pointer-events: none;
-    }
-
-    .tap-button:hover {
-      filter: brightness(1.05);
     }
 
     .tap-button:active,
     .tap-button.is-pressed {
       transform: scale(0.95);
       box-shadow:
-        inset 0 10px 20px rgba(0,0,0,0.18),
-        0 10px 18px rgba(0,0,0,0.2),
-        0 0 30px rgba(244, 114, 182, 0.18);
+        inset 0 12px 20px rgba(0,0,0,0.18),
+        0 10px 18px rgba(0,0,0,0.22),
+        0 0 30px rgba(34, 197, 94, 0.18);
     }
 
     .tap-button.upgraded {
@@ -288,7 +309,7 @@
         inset 0 8px 22px rgba(255,255,255,0.14),
         inset 0 -12px 22px rgba(0,0,0,0.22),
         0 24px 48px rgba(0,0,0,0.32),
-        0 0 56px rgba(34, 197, 94, 0.26);
+        0 0 58px rgba(74, 222, 128, 0.26);
     }
 
     .pig-image {
@@ -300,8 +321,8 @@
       pointer-events: none;
       user-select: none;
       -webkit-user-drag: none;
-      filter: drop-shadow(0 10px 18px rgba(0,0,0,0.22));
-      transition: transform 0.18s ease, filter 0.25s ease, opacity 0.22s ease;
+      filter: drop-shadow(0 12px 18px rgba(0,0,0,0.22));
+      transition: transform 0.18s ease, opacity 0.22s ease;
     }
 
     .tap-button.is-pressed .pig-image {
@@ -310,18 +331,18 @@
 
     .floating-text {
       position: absolute;
-      font-weight: 800;
+      font-weight: 900;
       font-size: 24px;
-      color: white;
-      text-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
+      color: #e8ffe8;
+      text-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.36),
+        0 0 18px rgba(74, 222, 128, 0.18);
       pointer-events: none;
       animation: floatUp 900ms ease-out forwards;
       white-space: nowrap;
     }
 
     .status {
-      position: relative;
-      z-index: 1;
       text-align: center;
       min-height: 28px;
       font-size: 15px;
@@ -331,13 +352,11 @@
     }
 
     .status.highlight {
-      color: #dcfce7;
+      color: #e2ffe8;
       transform: scale(1.02);
     }
 
     .progress-wrap {
-      position: relative;
-      z-index: 1;
       margin-bottom: 22px;
     }
 
@@ -355,28 +374,26 @@
       height: 14px;
       border-radius: 999px;
       background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.10);
+      border: 1px solid rgba(134, 239, 172, 0.1);
       overflow: hidden;
-      box-shadow: inset 0 2px 8px rgba(0,0,0,0.18);
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.2);
     }
 
     .progress-fill {
       width: 0%;
       height: 100%;
       border-radius: inherit;
-      background: linear-gradient(90deg, var(--accent), var(--accent-2));
-      transition: width 0.25s ease, background 0.25s ease;
-      box-shadow: 0 0 18px rgba(244,114,182,0.35);
+      background: linear-gradient(90deg, var(--green-1), var(--green-3));
+      transition: width 0.22s ease, background 0.25s ease;
+      box-shadow: 0 0 18px rgba(34, 197, 94, 0.35);
     }
 
     .progress-fill.done {
-      background: linear-gradient(90deg, #22c55e, #4ade80);
-      box-shadow: 0 0 22px rgba(34,197,94,0.35);
+      background: linear-gradient(90deg, #bbf7d0, #4ade80);
+      box-shadow: 0 0 22px rgba(134, 239, 172, 0.35);
     }
 
     .footer-actions {
-      position: relative;
-      z-index: 1;
       display: flex;
       gap: 12px;
       justify-content: center;
@@ -391,17 +408,135 @@
       color: var(--text);
       cursor: pointer;
       transition: transform 0.15s ease, background 0.2s ease, opacity 0.2s ease;
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.09);
+      border: 1px solid rgba(134, 239, 172, 0.14);
       backdrop-filter: blur(10px);
       touch-action: manipulation;
+      outline: none;
     }
 
     .btn:hover { transform: translateY(-1px); }
     .btn:active { transform: translateY(1px) scale(0.98); }
 
     .btn-primary {
-      background: linear-gradient(135deg, rgba(244,114,182,0.28), rgba(251,113,133,0.18));
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.24), rgba(74, 222, 128, 0.16));
+      box-shadow: 0 0 20px rgba(34, 197, 94, 0.1);
+    }
+
+    .toast-stack {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      width: min(360px, calc(100vw - 24px));
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 50;
+      pointer-events: none;
+    }
+
+    .toast {
+      pointer-events: auto;
+      display: grid;
+      grid-template-columns: 42px 1fr auto;
+      gap: 12px;
+      align-items: start;
+      padding: 14px 14px 14px 12px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(12, 32, 20, 0.96), rgba(9, 24, 15, 0.96));
+      border: 1px solid rgba(134, 239, 172, 0.18);
+      box-shadow:
+        0 16px 38px rgba(0,0,0,0.34),
+        0 0 22px rgba(34, 197, 94, 0.08);
+      transform: translateX(120%);
+      opacity: 0;
+      animation: toastIn 0.34s ease forwards;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .toast::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      height: 3px;
+      width: 100%;
+      background: linear-gradient(90deg, var(--green-2), var(--green-3));
+      transform-origin: left center;
+      animation: toastTimer 4.6s linear forwards;
+    }
+
+    .toast.exit {
+      animation: toastOut 0.28s ease forwards;
+    }
+
+    .toast-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: rgba(34, 197, 94, 0.14);
+      border: 1px solid rgba(134, 239, 172, 0.16);
+      font-size: 20px;
+    }
+
+    .toast-content {
+      min-width: 0;
+    }
+
+    .toast-title {
+      font-size: 14px;
+      font-weight: 800;
+      margin-bottom: 4px;
+      color: #efffef;
+      line-height: 1.25;
+    }
+
+    .toast-text {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.4;
+      word-break: break-word;
+    }
+
+    .toast-close {
+      border: none;
+      background: transparent;
+      color: #d4f7da;
+      opacity: 0.76;
+      font-size: 18px;
+      cursor: pointer;
+      line-height: 1;
+      padding: 2px 0 0;
+    }
+
+    @keyframes toastIn {
+      from {
+        transform: translateX(120%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes toastOut {
+      from {
+        transform: translateX(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateX(120%);
+        opacity: 0;
+      }
+    }
+
+    @keyframes toastTimer {
+      from { transform: scaleX(1); }
+      to { transform: scaleX(0); }
     }
 
     @keyframes floatUp {
@@ -409,18 +544,18 @@
         opacity: 0;
         transform: translateY(10px) scale(0.8);
       }
-      15% {
+      14% {
         opacity: 1;
       }
       100% {
         opacity: 0;
-        transform: translateY(-90px) scale(1.15);
+        transform: translateY(-92px) scale(1.15);
       }
     }
 
     @keyframes pulseBg {
-      0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.7; }
-      50% { transform: scale(1.08) rotate(8deg); opacity: 1; }
+      0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.8; }
+      50% { transform: scale(1.08) rotate(6deg); opacity: 1; }
     }
 
     @keyframes floatRing {
@@ -429,7 +564,7 @@
     }
 
     @keyframes popIn {
-      0% { transform: scale(0.8); opacity: 0; }
+      0% { transform: scale(0.82); opacity: 0; }
       100% { transform: scale(1); opacity: 1; }
     }
 
@@ -437,6 +572,11 @@
       0% { filter: drop-shadow(0 0 10px rgba(255, 204, 51, 0.18)); }
       50% { filter: drop-shadow(0 0 18px rgba(255, 214, 102, 0.34)); }
       100% { filter: drop-shadow(0 0 10px rgba(255, 204, 51, 0.18)); }
+    }
+
+    @keyframes driftBg {
+      from { transform: translateY(0); }
+      to { transform: translateY(40px); }
     }
 
     .pop-in {
@@ -454,28 +594,37 @@
       }
 
       .ring {
-        width: 280px;
-        height: 280px;
+        width: 284px;
+        height: 284px;
       }
 
       .tap-button {
-        width: 220px;
-        height: 220px;
+        width: 222px;
+        height: 222px;
       }
 
       .footer-actions {
         flex-direction: column;
       }
+
+      .toast-stack {
+        left: 12px;
+        right: 12px;
+        width: auto;
+      }
     }
   </style>
 </head>
 <body>
+  <div class="money-pattern"></div>
+  <div class="toast-stack" id="toastStack" aria-live="polite" aria-atomic="false"></div>
+
   <main class="app">
     <header class="header">
-      <div class="badge">🐷 Tap game</div>
+      <div class="badge">💸 Swin Money Tap</div>
       <h1>Тапай по свину</h1>
       <p class="subtitle">
-        Нажимай на круглого свина, набирай тапы и открывай нового свина каждые 50 нажатий.
+        Зелёный денежный стиль, новые свины каждые 50 тапов и мемные уведомления по ходу игры.
       </p>
       <div class="ceo-title">СЕО Никозавр и Димозавр</div>
     </header>
@@ -498,7 +647,7 @@
       </button>
     </div>
 
-    <div class="status" id="statusText">Свин готов к тапам 🐽</div>
+    <div class="status" id="statusText">Свин готов к денежным тапам 🐽</div>
 
     <section class="progress-wrap">
       <div class="progress-meta">
@@ -532,6 +681,30 @@
       "swin10.png"
     ];
 
+    const earlyToasts = [
+      { icon: "📞", title: "Вам звонят", text: "Алло, это отдел внезапных вопросов. Почему свин ещё не натапан?" },
+      { icon: "💬", title: "Новое сообщение", text: "Юрке пишет: брат, свин солидный, продолжай." },
+      { icon: "💸", title: "Напоминание", text: "Финансовый дух шепчет: ещё немного тапов и будет новый свин." },
+      { icon: "📱", title: "Пропущенный мем", text: "Кто-то пытался отправить тебе стикер со свином-бизнесменом." },
+      { icon: "🧾", title: "Кредит внимания", text: "Просрочка по улыбке. Срочно натапай ещё 7 раз." }
+    ];
+
+    const midToasts = [
+      { icon: "🟢", title: "Брат на связи", text: "Алё, брат, чё как сам? Есть настрой на ещё 50 тапов?" },
+      { icon: "💰", title: "Запрос по долгу", text: "Брат, есть в долг немного тапов? Верну в следующей жизни." },
+      { icon: "📈", title: "Свин-биржа", text: "Курс свина вырос. Аналитики советуют тапать без паники." },
+      { icon: "🎩", title: "Уважаемый инвестор", text: "Ваш портфель состоит из свина и уверенности. Хороший выбор." },
+      { icon: "🐷", title: "Свин одобряет", text: "Новый уровень почти здесь. Свин уже разминает копыта." }
+    ];
+
+    const lateToasts = [
+      { icon: "👑", title: "Легендарный статус", text: "Ты уже выглядишь как человек, у которого 17 секретных свинов." },
+      { icon: "🚀", title: "Денежный разгон", text: "Система сообщает: уровень богатого абсурда повышен." },
+      { icon: "💼", title: "Бизнес-предложение", text: "Открой холдинг по тапанию. Первый свин уже в совете директоров." },
+      { icon: "🪙", title: "Монетный совет", text: "Копи не деньги, а новых свинов. Это надёжнее." },
+      { icon: "✨", title: "Почти максимум", text: "Свиньи меняются одна за другой. Ситуация под полным мем-контролем." }
+    ];
+
     const tapButton = document.getElementById("tapButton");
     const pigImage = document.getElementById("pigImage");
     const tapCountEl = document.getElementById("tapCount");
@@ -542,11 +715,13 @@
     const resetButton = document.getElementById("resetButton");
     const vibeButton = document.getElementById("vibeButton");
     const tapZoneWrap = document.getElementById("tapZoneWrap");
+    const toastStack = document.getElementById("toastStack");
 
     let tapCount = 0;
     let currentPigStage = 0;
     let vibrationEnabled = true;
     let lastTouchEnd = 0;
+    let lastToastTapMark = 0;
 
     function getMaxStage() {
       return pigStages.length - 1;
@@ -557,6 +732,78 @@
         return currentPigStage * GOAL_STEP;
       }
       return (currentPigStage + 1) * GOAL_STEP;
+    }
+
+    function getToastPool() {
+      if (currentPigStage < 2) return earlyToasts;
+      if (currentPigStage < 6) return midToasts;
+      return lateToasts;
+    }
+
+    function randomItem(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function showToast({ icon = "💬", title = "Уведомление", text = "" }) {
+      const toast = document.createElement("div");
+      toast.className = "toast";
+
+      toast.innerHTML = `
+        <div class="toast-icon">${icon}</div>
+        <div class="toast-content">
+          <div class="toast-title"></div>
+          <div class="toast-text"></div>
+        </div>
+        <button class="toast-close" type="button" aria-label="Закрыть">×</button>
+      `;
+
+      toast.querySelector(".toast-title").textContent = title;
+      toast.querySelector(".toast-text").textContent = text;
+
+      const closeBtn = toast.querySelector(".toast-close");
+      closeBtn.addEventListener("click", () => removeToast(toast));
+
+      toastStack.prepend(toast);
+
+      while (toastStack.children.length > 4) {
+        toastStack.lastElementChild.remove();
+      }
+
+      setTimeout(() => removeToast(toast), 4600);
+    }
+
+    function removeToast(toast) {
+      if (!toast || toast.classList.contains("exit")) return;
+      toast.classList.add("exit");
+      setTimeout(() => toast.remove(), 280);
+    }
+
+    function maybeToastOnTap() {
+      const shouldShowMilestoneToast = tapCount > 0 && tapCount % GOAL_STEP === 0;
+      const shouldShowRandomToast = tapCount - lastToastTapMark >= 12 && Math.random() < 0.22;
+
+      if (!shouldShowMilestoneToast && !shouldShowRandomToast) return;
+
+      lastToastTapMark = tapCount;
+
+      if (shouldShowMilestoneToast) {
+        if (currentPigStage >= getMaxStage()) {
+          showToast({
+            icon: "🏆",
+            title: "Все свины открыты",
+            text: "Максимальный набор свинов собран. Финансовая свино-элита достигнута."
+          });
+        } else {
+          showToast({
+            icon: "🐷",
+            title: `Открыт Свин ${currentPigStage + 1}`,
+            text: "Поздравляем. Уровень свино-роскоши успешно повышен."
+          });
+        }
+        return;
+      }
+
+      showToast(randomItem(getToastPool()));
     }
 
     function updateUI() {
@@ -640,13 +887,14 @@
       tapCount += 1;
       updateUI();
       maybeVibrate();
+      maybeToastOnTap();
 
       tapButton.classList.remove("is-pressed");
       void tapButton.offsetWidth;
       tapButton.classList.add("is-pressed");
       setTimeout(() => tapButton.classList.remove("is-pressed"), 90);
 
-      createFloatingText(clientX, clientY, currentPigStage > 0 ? "+1 ✨" : "+1");
+      createFloatingText(clientX, clientY, currentPigStage > 0 ? "+1 💸" : "+1");
 
       if (tapCount > 0 && tapCount % GOAL_STEP === 0) {
         createFloatingText(clientX, clientY - 25, `SWIN ${currentPigStage + 1}!`);
@@ -696,13 +944,21 @@
     resetButton.addEventListener("click", () => {
       tapCount = 0;
       currentPigStage = 0;
+      lastToastTapMark = 0;
       pigImage.src = pigStages[0];
       pigImage.alt = "Свин 1";
       tapButton.classList.remove("upgraded");
       progressFill.classList.remove("done");
-      statusText.textContent = "Свин готов к тапам 🐽";
+      statusText.textContent = "Свин готов к денежным тапам 🐽";
       statusText.classList.remove("highlight");
+      toastStack.innerHTML = "";
       updateUI();
+
+      showToast({
+        icon: "🔄",
+        title: "Счётчик сброшен",
+        text: "Финансовая свино-история началась заново."
+      });
     });
 
     vibeButton.addEventListener("click", () => {
@@ -710,9 +966,25 @@
       vibeButton.textContent = vibrationEnabled
         ? "Вкл/выкл вибро-эффект"
         : "Вибро-эффект выключен";
+
+      showToast({
+        icon: vibrationEnabled ? "📳" : "🔕",
+        title: vibrationEnabled ? "Вибро включено" : "Вибро выключено",
+        text: vibrationEnabled
+          ? "Теперь каждый тап ощущается солиднее."
+          : "Тапаем тихо, но уверенно."
+      });
     });
 
     updateUI();
+
+    setTimeout(() => {
+      showToast({
+        icon: "💚",
+        title: "Добро пожаловать",
+        text: "Зелёный денежный режим активирован. Свин готов к росту капитала."
+      });
+    }, 500);
   </script>
 </body>
 </html>
